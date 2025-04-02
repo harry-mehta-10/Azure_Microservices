@@ -1,40 +1,35 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy ASP.Net Core app to Azure Web App - nscc-0484912-webapp
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: windows-latest
     permissions:
       contents: read #This is required for actions/checkout
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-
+      - name: List directory contents
+        run: |
+          dir
+          dir Azure_Microservices
       - name: Build with dotnet
-        run: dotnet build --configuration Release
-
+        run: dotnet build Azure_Microservices/Azure_Microservices.csproj --configuration Release
       - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-
+        run: dotnet publish Azure_Microservices/Azure_Microservices.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
-
   deploy:
     runs-on: windows-latest
     needs: build
@@ -44,7 +39,6 @@ jobs:
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
-
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -57,7 +51,6 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A49AEDCBCD504E1998DA965C95E15C55 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_237A5E2EE17841548C9272CF777D2B0B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EE371761B17F43BE8759391A66D9F24B }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -65,4 +58,3 @@ jobs:
           app-name: 'nscc-0484912-webapp'
           slot-name: 'Production'
           package: .
-          
