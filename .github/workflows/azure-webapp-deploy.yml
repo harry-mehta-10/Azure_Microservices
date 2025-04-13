@@ -66,4 +66,5 @@ jobs:
         with:
           app-name: '0484912-tickethub-ui'
           slot-name: 'Production'
+          resource-group-name: 'nscc-0484912-webapp_group'
           package: ${{ env.DOTNET_ROOT }}/myapp
