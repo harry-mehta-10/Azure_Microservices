@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Azure_Microservices")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d2cce6b7448b84f88e72ae3d579d6d594cc770b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Azure_Microservices")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Azure_Microservices")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

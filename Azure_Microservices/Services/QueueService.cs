@@ -13,7 +13,7 @@ namespace Azure_Microservices.Services
         {
             _logger = logger;
 
-            // Gets the connection string from user secrets
+            // Gets the connection string from configuration (for example, user secrets or app settings)
             string? connectionString = configuration["AzureStorageConnectionString"];
 
             if (string.IsNullOrEmpty(connectionString))
@@ -22,8 +22,7 @@ namespace Azure_Microservices.Services
                 throw new InvalidOperationException("Azure Storage connection string not configured");
             }
 
-            // Creates the queue client
-            _queueClient = new QueueClient(connectionString, "tickethub");
+            _queueClient = new QueueClient(connectionString, "process-ticket-purchase");
             _queueClient.CreateIfNotExists();
         }
 
@@ -34,7 +33,7 @@ namespace Azure_Microservices.Services
                 // Serializes the ticket purchase to JSON
                 var message = JsonSerializer.Serialize(purchase);
 
-                // Sends the message to the queue
+                // Sends the message to the queue, ensuring UTF8 encoding and Base64 encoding for message
                 await _queueClient.SendMessageAsync(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)));
 
                 _logger.LogInformation($"Message for concert ID {purchase.ConcertId} sent to queue successfully");
