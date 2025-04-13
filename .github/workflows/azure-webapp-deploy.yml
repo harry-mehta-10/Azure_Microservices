@@ -1,13 +1,11 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 name: Build and deploy ASP.Net Core app to Azure Web App - 0484912-tickethub-ui
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: windows-latest
@@ -15,29 +13,23 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-
       - name: List directory contents
         run: |
           dir
           dir Azure_Microservices
-
       - name: Build with dotnet
         run: dotnet build Azure_Microservices/Azure_Microservices.csproj --configuration Release
-
       - name: dotnet publish
         run: dotnet publish Azure_Microservices/Azure_Microservices.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
-
   deploy:
     runs-on: windows-latest
     needs: build
@@ -52,14 +44,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A49AEDCBCD504E1998DA965C95E15C55 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_237A5E2EE17841548C9272CF777D2B0B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EE371761B17F43BE8759391A66D9F24B }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -67,4 +57,4 @@ jobs:
           app-name: '0484912-tickethub-ui'
           slot-name: 'Production'
           resource-group-name: 'nscc-0484912-webapp_group'
-          package: ${{ env.DOTNET_ROOT }}/myapp
+          package: .
